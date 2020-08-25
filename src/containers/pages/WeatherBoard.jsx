@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import SettingsIcon from "@material-ui/icons/Settings";
-import * as ls from "local-storage";
 import moment from "moment";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +16,6 @@ import {
   saveConfiguration,
 } from "../../store/app/actions";
 import { getTemperature } from "../../utils/helpers";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -34,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "auto",
   },
   listItem: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
   },
   listItemIcon: {
     width: theme.spacing(9),
@@ -60,7 +58,9 @@ export default function WeatherBoard(props) {
 
   const classes = useStyles();
 
-  let titleText = `${ls.get("city")} - ${weatherData.timezone}`;
+  let titleText = city
+    ? `${city} - ${weatherData.timezone}`
+    : weatherData.timezone;
   let date = moment.unix(weatherData?.current?.dt);
 
   const icon = weatherData?.current?.weather[0].icon;
@@ -215,34 +215,28 @@ export default function WeatherBoard(props) {
               const date = moment.unix(hour?.dt);
 
               return (
-                <div key={hour?.dt} className={classes.listItem}>
-                  <Grid container direction="column">
-                    <Grid item component={Typography} variant="body1">
-                      {date.format("ddd, Do")}
-                    </Grid>
-                    <Grid
-                      item
-                      component={Avatar}
-                      variant="square"
-                      src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
-                      alt="day_cast"
-                      className={classes.listItemIcon}
-                    ></Grid>
-                    <Grid item>
-                      <Grid container>
-                        <Typography variant="body1">
-                          {getTemperature(hour?.temp?.max)}°
-                          {temperatureUnit.toUpperCase()}
-                        </Typography>
-                        <Typography variant="body1">&nbsp;|&nbsp;</Typography>
-                        <Typography variant="body1" color="textSecondary">
-                          {getTemperature(hour?.temp?.min)}°
-                          {temperatureUnit.toUpperCase()}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+                <Grid key={hour?.dt} item className={classes.listItem} xs={3}>
+                  <Grid
+                    item
+                    component={Avatar}
+                    variant="square"
+                    src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`}
+                    alt="day_cast"
+                    className={classes.listItemIcon}
+                  ></Grid>
+                  <Grid item component={Typography} variant="body2">
+                    {getTemperature(hour?.temp)}°{temperatureUnit.toUpperCase()}
                   </Grid>
-                </div>
+                  <Grid item component={Typography} variant="body2">
+                    {hour.weather[0].description}
+                  </Grid>
+                  <Grid item>
+                    <Divider />
+                  </Grid>
+                  <Grid item component={Typography} variant="subtitle1">
+                    {date.format("HH:mm")}
+                  </Grid>
+                </Grid>
               );
             })}
           </div>

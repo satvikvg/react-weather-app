@@ -7,3 +7,7 @@ export const ONE_CALL_WEATHER_DATA_SUCCESS =
   "store.app.ONE_CALL_WEATHER_DATA_SUCCESS";
 export const ONE_CALL_WEATHER_DATA_FAILURE =
   "store.app.ONE_CALL_WEATHER_DATA_FAILURE";
+
+export const FIND_PLACE_REQUEST = "store.app.FIND_PLACE_REQUEST";
+export const FIND_PLACE_SUCCESS = "store.app.FIND_PLACE_SUCCESS";
+export const FIND_PLACE_FAILURE = "store.app.FIND_PLACE_FAILURE";

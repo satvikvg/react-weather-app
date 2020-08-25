@@ -5,6 +5,9 @@ import {
   ONE_CALL_WEATHER_DATA_FAILURE,
   ONE_CALL_WEATHER_DATA_REQUEST,
   ONE_CALL_WEATHER_DATA_SUCCESS,
+  FIND_PLACE_REQUEST,
+  FIND_PLACE_SUCCESS,
+  FIND_PLACE_FAILURE,
 } from "./types";
 import { config } from "../../configuration/config";
 
@@ -66,5 +69,24 @@ export const getOneCallForcastData = () => async (dispatch, getState) => {
   } catch (error) {
     console.error(error);
     dispatch({ type: ONE_CALL_WEATHER_DATA_FAILURE, payload: error });
+  }
+};
+
+export const findPlace = (query) => async (dispatch, getState) => {
+  dispatch({ type: FIND_PLACE_REQUEST });
+
+  try {
+    const response = await fetch(
+      `${config.URL}${config.CONTEXT}/find?q=${query}&type=like&sort=population&cnt=30&appid=${config.APP_ID}`
+    );
+
+    const data = response ? await response.json() : null;
+
+    if (data) {
+      dispatch({ type: FIND_PLACE_SUCCESS, payload: data.list });
+    }
+  } catch (error) {
+    console.error(error);
+    dispatch({ type: FIND_PLACE_FAILURE, payload: error });
   }
 };
